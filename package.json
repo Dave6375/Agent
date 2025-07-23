@@ -2,11 +2,16 @@
   "name": "ai-travel-agent",
   "version": "1.0.0",
   "description": "A powerful AI travel assistant with real-time web search, weather data, and location services",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "start": "node index.js",
-    "dev": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app.js",
+    "dev": "node --watch app.js",
+    "test": "NODE_ENV=test node --test test/*.test.js",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "audit": "npm audit",
+    "security-check": "npm audit --audit-level moderate"
   },
   "keywords": [
     "ai",
@@ -20,11 +25,19 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "express": "^4.18.2",
-    "openai": "^4.0.0",
-    "node-telegram-bot-api": "^0.64.0",
-    "axios": "^1.6.0",
-    "dotenv": "^16.3.1"
+    "express": "^4.21.1",
+    "openai": "^4.73.1",
+    "telegraf": "^4.16.3",
+    "axios": "^1.7.9",
+    "dotenv": "^16.4.7",
+    "express-rate-limit": "^7.4.1",
+    "helmet": "^8.0.0",
+    "joi": "^17.13.3"
+  },
+  "devDependencies": {
+    "eslint": "^9.18.0",
+    "prettier": "^3.4.2",
+    "@eslint/js": "^9.18.0"
   },
   "engines": {
     "node": ">=18.0.0"
