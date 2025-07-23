@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const config = require('./src/config/config');
 const logger = require('./src/utils/logger');
+const metricsService = require('./src/services/metricsService');
 const telegramBot = require('./src/services/telegram');
 const apiRoutes = require('./src/routes/api');
 const {
@@ -20,6 +21,9 @@ app.set('trust proxy', 1);
 
 // Security middleware
 app.use(securityMiddleware);
+
+// Metrics tracking
+app.use(metricsService.trackingMiddleware());
 
 // Request logging
 if (config.isDevelopment) {
@@ -95,10 +99,18 @@ const server = app.listen(config.port, async () => {
   // Log available services
   const serpApiService = require('./src/services/serpApi');
   const weatherService = require('./src/services/weather');
+  const currencyService = require('./src/services/currencyService');
+  const timezoneService = require('./src/services/timezoneService');
+  const flightService = require('./src/services/flightService');
+  const hotelService = require('./src/services/hotelService');
 
   logger.info('🔧 Available services:', {
     webSearch: serpApiService.isAvailable(),
     weather: weatherService.isAvailable(),
+    currency: currencyService.isAvailable(),
+    timezone: timezoneService.isAvailable(),
+    flights: flightService.isAvailable(),
+    hotels: hotelService.isAvailable(),
     telegram: telegramBot.isActive()
   });
 
