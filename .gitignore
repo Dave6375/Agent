@@ -11,6 +11,9 @@ yarn-error.log*
 .env.test.local
 .env.production.local
 
+# Test environment (keep in repo for CI)
+# .env.test
+
 # Logs
 logs
 *.log
@@ -59,3 +62,19 @@ jspm_packages/
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# Development
+dist/
+build/
+temp/
+tmp/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS generated files
+*.tmp
+*.temp
