@@ -214,8 +214,10 @@
             <div class="features">
                 <div class="feature">🌐 Web Search</div>
                 <div class="feature">🌤️ Weather</div>
-                <div class="feature">📍 Locations</div>
-                <div class="feature">✈️ Travel Planning</div>
+                <div class="feature">✈️ Flights</div>
+                <div class="feature">🏨 Hotels</div>
+                <div class="feature">💱 Currency</div>
+                <div class="feature">🕐 Timezones</div>
             </div>
         </div>
 
@@ -223,14 +225,30 @@
             <div class="error" id="error"></div>
             
             <div class="controls">
-                <button class="control-button" onclick="clearChat()">🧹 Clear Chat</button>
-                <button class="control-button" onclick="showStats()">📊 Stats</button>
-                <button class="control-button" onclick="showHelp()">❓ Help</button>
+                <button class="control-button" id="clearButton">🧹 Clear Chat</button>
+                <button class="control-button" id="statsButton">📊 Stats</button>
+                <button class="control-button" id="helpButton">❓ Help</button>
             </div>
 
             <div class="messages" id="messages">
                 <div class="ai-message">
-                    <strong>AI Travel Agent:</strong> Welcome! I'm your AI travel assistant. I can help you with travel planning, weather information, web searches, and location recommendations. What would you like to know?
+                    <strong>🤖 Expert AI Travel Agent:</strong> Welcome! I'm your comprehensive AI travel assistant with access to real-time information and travel booking tools. 
+                    
+                    <br><br><strong>I can help you with:</strong>
+                    <br>✈️ Flight searches with pricing and schedules
+                    <br>🏨 Hotel recommendations and bookings
+                    <br>🌤️ Weather forecasts for any destination
+                    <br>💱 Currency conversions for budget planning
+                    <br>🕐 Timezone information for travel planning
+                    <br>🌐 Real-time web searches for travel information
+                    
+                    <br><br><strong>Try asking:</strong>
+                    <br>• "Find flights from New York to London on December 15th"
+                    <br>• "Search hotels in Paris for 3 nights starting January 20th"
+                    <br>• "What's the weather like in Tokyo next week?"
+                    <br>• "Convert $500 USD to Euros"
+                    
+                    <br><br>What travel plans can I help you with today?
                 </div>
             </div>
 
@@ -241,156 +259,16 @@
                     type="text" 
                     class="message-input" 
                     id="messageInput" 
-                    placeholder="Ask me about travel, weather, or search for information..."
+                    placeholder="Ask about flights, hotels, weather, currency, or any travel question..."
                     maxlength="4000"
                 >
-                <button class="send-button" id="sendButton" onclick="sendMessage()">Send</button>
+                <button class="send-button" id="sendButton">Send</button>
             </div>
 
-            <div class="status" id="status">Ready to help with your travel needs!</div>
+            <div class="status" id="status">Ready to help with comprehensive travel planning!</div>
         </div>
     </div>
 
-    <script>
-        const messagesContainer = document.getElementById('messages');
-        const messageInput = document.getElementById('messageInput');
-        const sendButton = document.getElementById('sendButton');
-        const loading = document.getElementById('loading');
-        const error = document.getElementById('error');
-        const status = document.getElementById('status');
-
-        // Enable sending messages with Enter key
-        messageInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                sendMessage();
-            }
-        });
-
-        async function sendMessage() {
-            const message = messageInput.value.trim();
-            if (!message) return;
-
-            // Clear any previous errors
-            hideError();
-
-            // Add user message to chat
-            addMessage(message, 'user');
-            
-            // Clear input and disable send button
-            messageInput.value = '';
-            sendButton.disabled = true;
-            loading.style.display = 'block';
-            status.textContent = 'Processing your request...';
-
-            try {
-                const response = await fetch('/api/chat', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ message })
-                });
-
-                const data = await response.json();
-
-                if (!response.ok) {
-                    throw new Error(data.error || 'Failed to get response');
-                }
-
-                // Add AI response to chat
-                addMessage(data.response, 'ai');
-                status.textContent = 'Ready for your next question!';
-
-            } catch (err) {
-                showError(err.message);
-                status.textContent = 'Error occurred. Please try again.';
-            } finally {
-                sendButton.disabled = false;
-                loading.style.display = 'none';
-                messageInput.focus();
-            }
-        }
-
-        function addMessage(text, sender) {
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${sender}-message`;
-            
-            if (sender === 'ai') {
-                messageDiv.innerHTML = `<strong>AI:</strong> ${text.replace(/\n/g, '<br>')}`;
-            } else {
-                messageDiv.textContent = text;
-            }
-
-            messagesContainer.appendChild(messageDiv);
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-        }
-
-        function clearChat() {
-            fetch('/api/clear', { method: 'POST' })
-                .then(() => {
-                    messagesContainer.innerHTML = `
-                        <div class="ai-message">
-                            <strong>AI Travel Agent:</strong> Chat cleared! How can I help you with your travel needs?
-                        </div>
-                    `;
-                    hideError();
-                    status.textContent = 'Chat cleared successfully!';
-                })
-                .catch(err => showError('Failed to clear chat'));
-        }
-
-        function showStats() {
-            fetch('/api/stats')
-                .then(response => response.json())
-                .then(data => {
-                    const statsMessage = `📊 System Stats:
-                    
-🗣️ Active conversations: ${data.totalConversations}
-⏱️ Uptime: ${Math.round(data.uptime / 3600)} hours
-💾 Memory: ${Math.round(data.memoryUsage.heapUsed / 1024 / 1024)} MB
-🌐 Web Search: ${data.tools.webSearch ? '✅' : '❌'}
-🌤️ Weather: ${data.tools.weather ? '✅' : '❌'}`;
-                    
-                    addMessage(statsMessage, 'ai');
-                })
-                .catch(err => showError('Failed to get stats'));
-        }
-
-        function showHelp() {
-            const helpMessage = `🤖 How to use the AI Travel Agent:
-
-✈️ **Travel Planning**: "Plan a 3-day trip to Tokyo"
-🌤️ **Weather**: "What's the weather in Paris?"
-🌐 **Search**: "Find the best restaurants in New York"
-📍 **Locations**: "Best beaches in California"
-🏨 **Hotels**: "Luxury hotels in London under $300"
-🎫 **Events**: "Concerts in Chicago this weekend"
-
-**Tips:**
-• Be specific with your questions
-• Ask for multiple options or recommendations
-• I can search the web for current information
-• Get weather for any city worldwide
-
-Try asking me anything about travel!`;
-            
-            addMessage(helpMessage, 'ai');
-        }
-
-        function showError(message) {
-            error.textContent = message;
-            error.style.display = 'block';
-        }
-
-        function hideError() {
-            error.style.display = 'none';
-        }
-
-        // Focus on input when page loads
-        window.addEventListener('load', () => {
-            messageInput.focus();
-        });
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>

@@ -36,19 +36,19 @@ class SerpApiService {
       });
 
       const results = this.parseSearchResults(response.data);
-      
-      logger.info('SERP API search completed', { 
-        query, 
-        resultsCount: results.length 
+
+      logger.info('SERP API search completed', {
+        query,
+        resultsCount: results.length
       });
 
       return results;
 
     } catch (error) {
-      logger.error('SERP API error', { 
+      logger.error('SERP API error', {
         error: error.message,
         query,
-        status: error.response?.status 
+        status: error.response?.status
       });
 
       if (error.response?.status === 401) {
@@ -63,7 +63,7 @@ class SerpApiService {
 
   parseSearchResults(data) {
     const results = [];
-    
+
     if (data.organic_results) {
       data.organic_results.forEach(result => {
         results.push({
@@ -115,9 +115,9 @@ class SerpApiService {
   async executeFunction(functionCall) {
     const { query, country } = JSON.parse(functionCall.arguments);
     const results = await this.search(query, { country });
-    
+
     // Format results for AI consumption
-    return results.map(result => 
+    return results.map(result =>
       `${result.title}: ${result.snippet} ${result.link ? `(${result.link})` : ''}`
     ).join('\n\n');
   }

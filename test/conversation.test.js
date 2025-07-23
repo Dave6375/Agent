@@ -6,7 +6,7 @@ describe('Conversation Service Tests', () => {
   test('should create new conversation', () => {
     const platform = 'test';
     const userId = 'user123';
-    
+
     const conversation = conversationService.getConversation(platform, userId);
     assert.strictEqual(conversation.messages.length, 0);
     assert.ok(conversation.createdAt instanceof Date);
@@ -16,10 +16,10 @@ describe('Conversation Service Tests', () => {
   test('should add message to conversation', () => {
     const platform = 'test';
     const userId = 'user456';
-    
+
     conversationService.addMessage(platform, userId, 'user', 'Hello');
     conversationService.addMessage(platform, userId, 'assistant', 'Hi there!');
-    
+
     const history = conversationService.getHistory(platform, userId);
     assert.strictEqual(history.length, 2);
     assert.strictEqual(history[0].role, 'user');
@@ -31,12 +31,12 @@ describe('Conversation Service Tests', () => {
   test('should limit conversation history', () => {
     const platform = 'test';
     const userId = 'user789';
-    
+
     // Add many messages
     for (let i = 0; i < 25; i++) {
       conversationService.addMessage(platform, userId, 'user', `Message ${i}`);
     }
-    
+
     const history = conversationService.getHistory(platform, userId);
     assert.ok(history.length <= 10); // Default limit
   });
@@ -44,10 +44,10 @@ describe('Conversation Service Tests', () => {
   test('should clear conversation', () => {
     const platform = 'test';
     const userId = 'user999';
-    
+
     conversationService.addMessage(platform, userId, 'user', 'Test message');
     conversationService.clearConversation(platform, userId);
-    
+
     const conversation = conversationService.getConversation(platform, userId);
     assert.strictEqual(conversation.messages.length, 0);
   });

@@ -17,7 +17,7 @@ class Validator {
 
   static sanitizeText(text) {
     if (typeof text !== 'string') return '';
-    
+
     // Remove potentially dangerous content
     return text
       .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '') // Remove script tags

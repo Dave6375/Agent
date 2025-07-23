@@ -23,7 +23,7 @@ class Logger {
       baseLog.meta = meta;
     }
 
-    return config.isDevelopment 
+    return config.isDevelopment
       ? `[${timestamp}] ${level.toUpperCase()}: ${message} ${Object.keys(meta).length > 0 ? JSON.stringify(meta, null, 2) : ''}`
       : JSON.stringify(baseLog);
   }
