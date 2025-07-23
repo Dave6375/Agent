@@ -34,8 +34,8 @@ class WeatherService {
       });
 
       const weatherData = this.parseWeatherData(response.data);
-      
-      logger.info('Weather data retrieved', { 
+
+      logger.info('Weather data retrieved', {
         location,
         temperature: weatherData.temperature,
         conditions: weatherData.conditions
@@ -44,10 +44,10 @@ class WeatherService {
       return weatherData;
 
     } catch (error) {
-      logger.error('Weather API error', { 
+      logger.error('Weather API error', {
         error: error.message,
         location,
-        status: error.response?.status 
+        status: error.response?.status
       });
 
       if (error.response?.status === 401) {
@@ -147,7 +147,7 @@ class WeatherService {
   async executeFunction(functionCall) {
     const { location } = JSON.parse(functionCall.arguments);
     const weather = await this.getCurrentWeather(location);
-    
+
     return `Current weather in ${weather.location}:
 Temperature: ${weather.temperature}°C (feels like ${weather.feelsLike}°C)
 Conditions: ${weather.conditions}

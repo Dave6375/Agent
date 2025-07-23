@@ -27,7 +27,7 @@ Always be helpful, accurate, and provide practical travel advice.`;
   async generateResponse(message, conversationHistory = [], availableTools = []) {
     try {
       const sanitizedMessage = Validator.sanitizeText(message);
-      
+
       const messages = [
         { role: 'system', content: this.systemPrompt },
         ...conversationHistory,
@@ -47,15 +47,15 @@ Always be helpful, accurate, and provide practical travel advice.`;
         requestConfig.tool_choice = 'auto';
       }
 
-      logger.debug('Making OpenAI API request', { 
+      logger.debug('Making OpenAI API request', {
         messageCount: messages.length,
-        toolsCount: availableTools.length 
+        toolsCount: availableTools.length
       });
 
       const completion = await this.client.chat.completions.create(requestConfig);
-      
+
       const response = completion.choices[0];
-      
+
       logger.info('OpenAI response generated', {
         usage: completion.usage,
         finishReason: response.finish_reason
@@ -68,11 +68,11 @@ Always be helpful, accurate, and provide practical travel advice.`;
       };
 
     } catch (error) {
-      logger.error('OpenAI API error', { 
+      logger.error('OpenAI API error', {
         error: error.message,
-        type: error.constructor.name 
+        type: error.constructor.name
       });
-      
+
       if (error.status === 401) {
         throw new Error('Invalid OpenAI API key');
       } else if (error.status === 429) {
@@ -87,11 +87,11 @@ Always be helpful, accurate, and provide practical travel advice.`;
 
   async generateTelegramResponse(message, conversationHistory = []) {
     // For Telegram, use shorter responses
-    const shortSystemPrompt = `You are a helpful AI travel assistant. Keep responses concise for messaging.`;
-    
+    const shortSystemPrompt = 'You are a helpful AI travel assistant. Keep responses concise for messaging.';
+
     try {
       const sanitizedMessage = Validator.sanitizeText(message);
-      
+
       const messages = [
         { role: 'system', content: shortSystemPrompt },
         ...conversationHistory.slice(-6), // Keep last 6 messages for context
@@ -106,7 +106,7 @@ Always be helpful, accurate, and provide practical travel advice.`;
       });
 
       const response = completion.choices[0].message.content;
-      
+
       // Truncate if too long for Telegram
       return response.length > 4000 ? response.substring(0, 3900) + '...' : response;
 

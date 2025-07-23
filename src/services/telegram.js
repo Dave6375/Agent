@@ -32,9 +32,9 @@ I can help you with:
 Just send me a message to get started!`;
 
       ctx.reply(welcomeMessage);
-      logger.info('Telegram user started bot', { 
+      logger.info('Telegram user started bot', {
         userId: ctx.from.id,
-        username: ctx.from.username 
+        username: ctx.from.username
       });
     });
 
@@ -116,7 +116,7 @@ Examples:
         });
 
         let errorMessage = '❌ Sorry, I encountered an error processing your request.';
-        
+
         if (error.message.includes('API key')) {
           errorMessage = '🔑 Service temporarily unavailable. Please try again later.';
         } else if (error.message.includes('rate limit')) {

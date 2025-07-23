@@ -4,12 +4,12 @@ const config = require('./src/config/config');
 const logger = require('./src/utils/logger');
 const telegramBot = require('./src/services/telegram');
 const apiRoutes = require('./src/routes/api');
-const { 
-  apiLimiter, 
-  securityMiddleware, 
-  requestLogger, 
+const {
+  apiLimiter,
+  securityMiddleware,
+  requestLogger,
   errorHandler,
-  healthCheck 
+  healthCheck
 } = require('./src/middleware/security');
 
 // Initialize Express app
@@ -49,9 +49,9 @@ app.get('/', (req, res) => {
 
 // 404 handler
 app.use('*', (req, res) => {
-  res.status(404).json({ 
+  res.status(404).json({
     error: 'Not found',
-    message: 'The requested resource was not found' 
+    message: 'The requested resource was not found'
   });
 });
 
@@ -61,10 +61,10 @@ app.use(errorHandler);
 // Graceful shutdown handler
 const gracefulShutdown = async (signal) => {
   logger.info(`Received ${signal}, starting graceful shutdown...`);
-  
+
   // Stop Telegram bot
   await telegramBot.stop();
-  
+
   // Close server
   server.close(() => {
     logger.info('Server closed successfully');
@@ -83,7 +83,7 @@ const server = app.listen(config.port, async () => {
   logger.info(`🚀 AI Travel Agent server started on port ${config.port}`);
   logger.info(`🌍 Environment: ${config.nodeEnv}`);
   logger.info(`📱 Web interface: http://localhost:${config.port}`);
-  
+
   // Start Telegram bot
   const telegramStarted = await telegramBot.start();
   if (telegramStarted) {
@@ -95,7 +95,7 @@ const server = app.listen(config.port, async () => {
   // Log available services
   const serpApiService = require('./src/services/serpApi');
   const weatherService = require('./src/services/weather');
-  
+
   logger.info('🔧 Available services:', {
     webSearch: serpApiService.isAvailable(),
     weather: weatherService.isAvailable(),

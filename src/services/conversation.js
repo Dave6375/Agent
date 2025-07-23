@@ -7,7 +7,7 @@ class ConversationService {
     this.conversations = new Map();
     this.maxHistoryLength = 20;
     this.cleanupInterval = 60 * 60 * 1000; // 1 hour
-    
+
     // Only start cleanup in non-test environments
     if (config.nodeEnv !== 'test') {
       this.intervalId = setInterval(() => this.cleanup(), this.cleanupInterval);
@@ -21,7 +21,7 @@ class ConversationService {
   getConversation(platform, userId) {
     const key = this.getConversationKey(platform, userId);
     const conversation = this.conversations.get(key);
-    
+
     if (!conversation) {
       return {
         messages: [],
@@ -82,7 +82,7 @@ class ConversationService {
   clearConversation(platform, userId) {
     const key = this.getConversationKey(platform, userId);
     this.conversations.delete(key);
-    
+
     logger.info('Conversation cleared', {
       platform,
       userId: userId.substring(0, 8) + '...'
@@ -101,9 +101,9 @@ class ConversationService {
     }
 
     if (cleanedCount > 0) {
-      logger.info('Cleaned up old conversations', { 
+      logger.info('Cleaned up old conversations', {
         cleaned: cleanedCount,
-        remaining: this.conversations.size 
+        remaining: this.conversations.size
       });
     }
   }

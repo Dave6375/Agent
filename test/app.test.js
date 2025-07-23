@@ -12,18 +12,18 @@ describe('Application Integration Tests', () => {
     // Set test environment
     process.env.OPENAI_API_KEY = 'test-key';
     process.env.NODE_ENV = 'test';
-    
+
     // Use random port to avoid conflicts
     port = 3000 + Math.floor(Math.random() * 1000);
-    
+
     // Import and start app
     app = require('../app');
-    
+
     // Wait for server to start
     await new Promise((resolve) => {
       server = app.listen(port, resolve);
     });
-    
+
     assert.ok(server, 'Server should be running');
   });
 
@@ -52,7 +52,7 @@ describe('Application Integration Tests', () => {
           });
         }
       );
-      
+
       req.on('error', reject);
       req.end();
     });
@@ -82,7 +82,7 @@ describe('Application Integration Tests', () => {
           });
         }
       );
-      
+
       req.on('error', reject);
       req.end();
     });
